@@ -32,8 +32,11 @@ public class Sphere : MonoBehaviour
         Vector3 currentScale = rb.transform.localScale;
         float scale = 1.25f;
 
-        rb.transform.localScale = new Vector3 (currentScale.x * scale, currentScale.y * scale, currentScale.z * scale);
-        other.gameObject.SetActive(false);
+        if (other.gameObject.CompareTag("PickUp"))
+        {
+            rb.transform.localScale = new Vector3(currentScale.x * scale, currentScale.y * scale, currentScale.z * scale);
+            other.gameObject.SetActive(false);
+        }
     }
 
     void OnMove(InputValue movementValue)
