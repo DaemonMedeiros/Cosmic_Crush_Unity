@@ -57,7 +57,7 @@ float4 frag(Varyings IN) : SV_Target
     result.xyz *= max(0, dot(normalize(IN.normalWS), normalize(light.direction))); // diffuse
     result.xyz *= MainLightRealtimeShadow(IN.shadow); // shadow
     result.xyz += shLight * color; // ambient
-    result.xyz += shLight * 2 * (1 - dot(normalize(IN.normalWS), normalize(IN.view))); // rim light
+    result.xyz += shLight * (1 - dot(normalize(IN.normalWS), normalize(IN.view))); // rim light
 
     return result;
 }

@@ -10,7 +10,9 @@ Shader "Custom/backdrop"
 
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
+        Tags { "Queue" = "Background-1000" "RenderType" = "Background" "RenderPipeline" = "UniversalPipeline" "PreviewType"="Skybox" }
+
+        ZWrite Off
 
         Pass
         {
@@ -54,7 +56,7 @@ Shader "Custom/backdrop"
                 OUT.positionHCS.x *= 2;
                 OUT.positionHCS.y *= -2;
                 //GetViewToHClipMatrix()[0][0];
-                OUT.positionHCS.z = 0.01;
+                OUT.positionHCS.z = 0;
                 OUT.positionHCS.w = 1;
                 OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
                 OUT.uv.x *= 2/(GetViewToHClipMatrix()[0][0]);
@@ -68,7 +70,7 @@ Shader "Custom/backdrop"
             {
                 half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv + (_Time.y * -LayerSpeeds.xy)) * _BaseColor;
                 color.xyz += SAMPLE_TEXTURE2D(_Layer2, sampler_Layer2, IN.uv2 + (_Time.y * -LayerSpeeds.zw) ) * _BaseColor;
-                return color;
+                return color * 4;
             }
             ENDHLSL
         }

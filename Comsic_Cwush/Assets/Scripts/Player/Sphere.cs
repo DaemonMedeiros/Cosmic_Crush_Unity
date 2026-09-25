@@ -27,6 +27,11 @@ public class Sphere : MonoBehaviour
         //    transform.LookAt(transform.position + new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z), Vector3.up);
     }
 
+    void LateUpdate()
+    {
+        Shader.SetGlobalVector("PlayerPos", transform.position);
+    }
+
     void OnTriggerEnter(Collider other)
     {
         Vector3 currentScale = rb.transform.localScale;
