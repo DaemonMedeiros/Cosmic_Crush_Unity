@@ -27,6 +27,15 @@ public class Sphere : MonoBehaviour
         //    transform.LookAt(transform.position + new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z), Vector3.up);
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        Vector3 currentScale = rb.transform.localScale;
+        float scale = 1.25f;
+
+        rb.transform.localScale = new Vector3 (currentScale.x * scale, currentScale.y * scale, currentScale.z * scale);
+        other.gameObject.SetActive(false);
+    }
+
     void OnMove(InputValue movementValue)
     {
         movementVector = movementValue.Get<Vector2>();
