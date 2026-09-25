@@ -47,8 +47,9 @@ float4 frag(Varyings IN) : SV_Target
     float4 result;
     result.xyz = pow(1 - dot(normalize(IN.normalWS), normalize(IN.view)), 3); // rim light
     result.xyz += pow(1/(length(PlayerPos - IN.positionWS)), 2); // contact light (red)
+    result.xyz += pow(1/length(PlayerPos - IN.positionWS), 32) * 0.5; // contact light (bright)
     result.xyz *= _BaseColor.xyz * _BaseColor.w; // tinting
-    result.xyz += pow(1/length(PlayerPos - IN.positionWS), 4) * 0.1; // contact light (white)
+    result.xyz += pow(1/length(PlayerPos - IN.positionWS), 4) * 0.5; // contact light (white)
     result.xyz *= IN.color.xyz * IN.color.w; // fading
 
     result.w = 1; // nuke alpha cuz we don't need it
@@ -67,7 +68,7 @@ Shader "Custom/arena border"
 
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
+        Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
         Pass
         {
