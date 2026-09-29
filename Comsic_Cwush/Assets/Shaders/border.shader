@@ -74,6 +74,8 @@ Shader "Custom/arena border"
         {
             ZWrite Off
             Blend One One
+            Cull Off
+
             HLSLPROGRAM
 
             #pragma vertex vert
