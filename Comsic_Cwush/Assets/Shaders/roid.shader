@@ -2,6 +2,8 @@ HLSLINCLUDE
 
 #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
 #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_SCREEN
+#pragma multi_compile_fragment _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -20,6 +22,7 @@ struct Varyings
     float3 normalWS : NORMAL0;
     float3 view : TEXCOORD1;
     float4 shadow : TEXCOORD2;
+    float3 positionWS : TEXCOORD3;
 };
 
 TEXTURE2D(_BaseMap);
@@ -38,9 +41,12 @@ Varyings vert(Attributes IN)
     OUT.normalWS = TransformObjectToWorldNormal(IN.normalOS);
 
     float3 worldPos = TransformObjectToWorld(IN.positionOS.xyz);
+    OUT.positionWS = worldPos;
 
     OUT.view = GetCameraPositionWS() - worldPos;
-    OUT.shadow = TransformWorldToShadowCoord(worldPos);
+
+    VertexPositionInputs positions = GetVertexPositionInputs(IN.positionOS.xyz);
+    OUT.shadow = GetShadowCoord(positions);
     return OUT;
 }
 
@@ -52,17 +58,50 @@ float4 frag(Varyings IN) : SV_Target
 
     float3 shLight = SampleSH(IN.normalWS);
     float3 diffuse = max(0, dot(normalize(IN.normalWS), normalize(light.direction)));
-    float3 specular = pow(saturate(dot(reflect(normalize(-light.direction), normalize(IN.normalWS)), normalize(IN.view))), 2) * 0.025f;
+    float3 specular = max(0, pow(saturate(dot(reflect(normalize(-light.direction), normalize(IN.normalWS)), normalize(IN.view))), 2)) * 0.025f;
+    
+    float shadow = lerp(MainLightRealtimeShadow(IN.shadow), 1.0, GetMainLightShadowFade(IN.positionWS)).x;
 
     float4 result = color;
     result.xyz += specular;// specular
     result.xyz *= diffuse; // diffuse
     result.xyz *= light.color; // tint by sun color
-    result.xyz *= MainLightRealtimeShadow(IN.shadow); // shadow
+    result.xyz *= shadow; // shadow
     result.xyz += shLight * color; // ambient
-   result.xyz += (shLight + (diffuse * 0.5 * light.color)) * (1 - dot(normalize(IN.normalWS), normalize(IN.view))) * 0.25; // rim light
+    result.xyz += (shLight + (diffuse * 0.5 * light.color * shadow)) * (1 - max(0, dot(normalize(IN.normalWS), normalize(IN.view)))) * 0.25; // rim light
 
     return result;
+}
+
+
+struct VtoP_shadow
+{
+    float4 positionHCS : SV_POSITION;
+};
+
+VtoP_shadow shadowVS(Attributes IN)
+{
+    VtoP_shadow OUT;
+
+    float3 positionWS = TransformObjectToWorld(IN.positionOS.xyz);
+    float3 normalWS = TransformObjectToWorldNormal(IN.normalOS);
+    
+    Light light = GetMainLight();
+
+    OUT.positionHCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, light.direction));
+
+    #if UNITY_REVERSED_Z
+        OUT.positionHCS.z = min(OUT.positionHCS.z, OUT.positionHCS.w * UNITY_NEAR_CLIP_VALUE);
+    #else
+        OUT.positionHCS.z = max(OUT.positionHCS.z, OUT.positionHCS.w * UNITY_NEAR_CLIP_VALUE);
+    #endif
+
+    return OUT;
+}
+
+float4 shadowPS(VtoP_shadow IN) : SV_Target
+{
+    return 0;
 }
 
 ENDHLSL
@@ -82,9 +121,25 @@ Shader "Custom/roid"
         Pass
         {
             HLSLPROGRAM
-
             #pragma vertex vert
             #pragma fragment frag
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+
+            ZWrite On
+            ZTest LEqual
+            ColorMask 0
+            Cull Back
+            
+            HLSLPROGRAM
+
+            #pragma vertex shadowVS
+            #pragma fragment shadowPS
             ENDHLSL
         }
     }
