@@ -18,10 +18,10 @@ MonoBehaviour:
     m_Value: 0
   threshold:
     m_OverrideState: 1
-    m_Value: 1.29
+    m_Value: 1.07
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.37
   scatter:
     m_OverrideState: 1
     m_Value: 0.5
@@ -65,7 +65,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 3.53
+    m_Value: 3.2
   tintColor:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -74,7 +74,7 @@ MonoBehaviour:
     m_Value: 1
   firstFlareIntensity:
     m_OverrideState: 1
-    m_Value: 3.03
+    m_Value: 0.82
   secondaryFlareIntensity:
     m_OverrideState: 1
     m_Value: 1
@@ -101,7 +101,7 @@ MonoBehaviour:
     m_Value: 1.15
   streaksIntensity:
     m_OverrideState: 1
-    m_Value: 3.56
+    m_Value: 1.02
   streaksLength:
     m_OverrideState: 1
     m_Value: 0.117

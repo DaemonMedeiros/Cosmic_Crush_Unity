@@ -30,6 +30,8 @@ SAMPLER(sampler_BaseMap);
 
 CBUFFER_START(UnityPerMaterial)
     float4 _BaseColor;
+    float4 _SpecColor;
+    float _SpecPower;
     float4 _BaseMap_ST;
 CBUFFER_END
 
@@ -59,9 +61,16 @@ float4 frag(Varyings IN) : SV_Target
     float3 shLight = SampleSH(IN.normalWS);
 
     float3 diffuse = max(0, dot(normalize(IN.normalWS), normalize(light.direction)));
-    float3 specular = max(0, pow(saturate(dot(reflect(normalize(-light.direction), normalize(IN.normalWS)), normalize(IN.view))), 22));
+    float RdotV = saturate((dot(reflect(normalize(-light.direction), normalize(IN.normalWS)), normalize(IN.view)) + 1) * 0.5);
+    float NdotV = max(0, dot(normalize(IN.normalWS), normalize(IN.view)));
+
+    float3 specular = pow(RdotV, _SpecPower) * _SpecColor * 2;
+    specular += pow(RdotV, _SpecPower * 80); // hotspot
+    specular = saturate(specular);
 
     float shadow = lerp(MainLightRealtimeShadow(IN.shadow), 1.0, GetMainLightShadowFade(IN.positionWS)).x;
+
+    color *= pow(NdotV, 0.5); // extinction
 
     float4 result = color;
     result.xyz += specular;// specular
@@ -69,7 +78,7 @@ float4 frag(Varyings IN) : SV_Target
     result.xyz *= light.color; // tint by sun color
     result.xyz *= shadow; // shadow
     result.xyz += shLight * color; // ambient
-    result.xyz += (shLight + (diffuse * 0.5 * light.color * shadow)) * (1 - max(0, dot(normalize(IN.normalWS), normalize(IN.view)))) * 0.5; // rim light
+    result.xyz += (shLight + (diffuse * 0.5 * light.color * shadow)) * (1 - pow(NdotV, 0.5)) * 0.25; // rim light
 
     return result;
 }
@@ -111,6 +120,8 @@ Shader "Custom/ball"
     Properties
     {
         [MainColor] _BaseColor("Base Color", Color) = (1, 1, 1, 1)
+        _SpecColor("Specular Color", Color) = (1, 1, 1, 1)
+        _SpecPower("Specular Power", Float) = 1
         [MainTexture] _BaseMap("Base Map", 2D) = "white" {}
     }
 
