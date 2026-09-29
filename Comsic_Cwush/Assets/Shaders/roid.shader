@@ -134,7 +134,7 @@ Shader "Custom/roid"
             ZWrite On
             ZTest LEqual
             ColorMask 0
-            Cull Back
+            Cull Off
             
             HLSLPROGRAM
 
