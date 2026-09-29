@@ -14,7 +14,7 @@ public class Camera : MonoBehaviour
         if (Target == null) // don't do anything if we don't have a target set
             return;
 
-        Vector3 relativePosition = new Vector3(0, MaxDist, MaxDist);//transform.position - Target.position;
+        Vector3 relativePosition = Vector3.Lerp(transform.position - Target.position, new Vector3(0, MaxDist, -MaxDist), 2 * Time.deltaTime);
         float length = relativePosition.magnitude;
         relativePosition = relativePosition.normalized; // normalize it
 

@@ -52,12 +52,16 @@ float4 frag(Varyings IN) : SV_Target
 
     float3 shLight = SampleSH(IN.normalWS);
 
+    float3 diffuse = max(0, dot(normalize(IN.normalWS), normalize(light.direction)));
+    float3 specular = pow(saturate(dot(reflect(normalize(-light.direction), normalize(IN.normalWS)), normalize(IN.view))), 22);
+
     float4 result = color;
-    result.xyz += pow(saturate(dot(reflect(normalize(-light.direction), normalize(IN.normalWS)), normalize(IN.view))), 22);// specular
-    result.xyz *= max(0, dot(normalize(IN.normalWS), normalize(light.direction))); // diffuse
+    result.xyz += specular;// specular
+    result.xyz *= diffuse; // diffuse
+    result.xyz *= light.color; // tint by sun color
     result.xyz *= MainLightRealtimeShadow(IN.shadow); // shadow
     result.xyz += shLight * color; // ambient
-    result.xyz += shLight * (1 - dot(normalize(IN.normalWS), normalize(IN.view))); // rim light
+    result.xyz += (shLight + (diffuse * 0.5 * light.color)) * (1 - dot(normalize(IN.normalWS), normalize(IN.view))) * 0.5; // rim light
 
     return result;
 }
