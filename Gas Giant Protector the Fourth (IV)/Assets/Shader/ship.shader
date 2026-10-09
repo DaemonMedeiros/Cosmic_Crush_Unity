@@ -178,7 +178,7 @@ Shader "Custom/ship"
             ZWrite On
             ZTest LEqual
             ColorMask 0
-            Cull Front
+            Cull Off
             
             HLSLPROGRAM
 
