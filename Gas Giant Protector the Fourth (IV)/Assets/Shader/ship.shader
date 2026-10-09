@@ -63,7 +63,7 @@ Varyings vert(Attributes IN)
     VertexPositionInputs positions = GetVertexPositionInputs(IN.positionOS.xyz);
     OUT.shadow = GetShadowCoord(positions);
 
-    OUT.color = IN.color.x;
+    OUT.color = saturate(2 * IN.color.x);
 
     float3 tangentWS = TransformObjectToWorldNormal(IN.tangent);
 
