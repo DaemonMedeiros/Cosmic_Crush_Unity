@@ -96,7 +96,7 @@ float4 frag(Varyings IN) : SV_Target
 
     float3 shLight = SampleSH(normal);
 
-    float3 diffuse = max(0, dot(normal, normalize(light.direction)));
+    float3 diffuse = saturate(0.1 + dot(normal, normalize(light.direction)));
     float RdotV = saturate((dot(reflect(normalize(-light.direction), normal), normalize(IN.view)) + 1) * 0.5);
     float RdotVFlake = saturate((dot(reflect(normalize(-light.direction), flakeNormal), normalize(IN.view)) + 1) * 0.5);
     float NdotV = max(0, dot(normal, normalize(IN.view)));
