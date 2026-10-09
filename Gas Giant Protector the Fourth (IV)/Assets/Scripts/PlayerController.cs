@@ -6,29 +6,33 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private InputSystem_Actions controls;
     private Rigidbody rb;
     private float movementX;
+
     public float speed = 200f;
 
-    void Start()
+    void Awake()
     {
+        controls = new InputSystem_Actions();
         rb = GetComponent<Rigidbody>();
     }
 
-    void OnMove(InputValue movementValue)
+    void OnEnable()
     {
-        Vector2 movementVector = movementValue.Get<Vector2>();
-        movementX = movementVector.x;
+        controls.Player.Enable();
+    }
+
+    void Update()
+    {
+        Vector2 movementVector = controls.Player.Move.ReadValue<Vector2>();
+        float movementX = movementVector.x;
+        rb.AddForce(Vector3.right * movementVector * speed * Time.deltaTime);
+        
     }
 
     void FixedUpdate()
     {
-        Vector3 movement = new Vector3(movementX, 0.0f, 0.0f);
-        rb.AddForce(movement * speed);
-
-        Vector3 pos = rb.position;
-        pos.x = Mathf.Clamp(pos.x, -9f, 9f);
-
         rb.linearVelocity = new Vector3( Mathf.Clamp(rb.linearVelocity.x, -10f, 10f), 0, 0 );
     }
 
@@ -36,6 +40,13 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 pos = rb.position;
         pos.x = Mathf.Clamp(pos.x, -9f, 9f);
+
+        if (pos.x == 9f || pos.x == -9f)
+        {
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, rb.linearVelocity.z);
+        }
+
+
         rb.position = pos;
     }
 }
