@@ -25,7 +25,8 @@ struct Varyings
     float3 view : TEXCOORD1;
     float4 shadow : TEXCOORD2;
     float3 positionWS : TEXCOORD3;
-    float3x3 tangentToWorld : TEXCOORD4;
+    float3 positionOS : TEXCOORD4;
+    float3x3 tangentToWorld : TEXCOORD5;
     float color : COLOR0;
 };
 
@@ -37,12 +38,14 @@ TEXTURE2D(_NormalMap);
 SAMPLER(sampler_NormalMap);
 TEXTURE2D(_SpecularMap);
 SAMPLER(sampler_SpecularMap);
+sampler3D _NoiseMap;
 
 CBUFFER_START(UnityPerMaterial)
     float4 _BaseColor;
     float4 _SpecColor;
     float _SpecPower;
     float _HotSpot;
+    float _Flake;
     float4 _BaseMap_ST;
     float4 _NormalMap_ST;
 CBUFFER_END
@@ -57,6 +60,7 @@ Varyings vert(Attributes IN)
 
     float3 worldPos = TransformObjectToWorld(IN.positionOS.xyz);
     OUT.positionWS = worldPos;
+    OUT.positionOS = IN.positionOS.xyz;
 
     OUT.view = GetCameraPositionWS() - worldPos;
 
@@ -82,6 +86,10 @@ float4 frag(Varyings IN) : SV_Target
     normal = TransformTangentToWorld(normal, IN.tangentToWorld);
     normal = normalize(normal);
 
+    float flakeFalloff = 1.0f / (1.0f + length(IN.view * 0.35f));
+
+    float3 flakeNormal = normalize(normal + (TransformObjectToWorldNormal(tex3Dbias(_NoiseMap, float4(IN.positionOS.xyz * 10, -3))) * _Flake * flakeFalloff));
+
     //return float4((1 + normal) / 2, 1);
 
     Light light = GetMainLight();
@@ -90,10 +98,11 @@ float4 frag(Varyings IN) : SV_Target
 
     float3 diffuse = max(0, dot(normal, normalize(light.direction)));
     float RdotV = saturate((dot(reflect(normalize(-light.direction), normal), normalize(IN.view)) + 1) * 0.5);
+    float RdotVFlake = saturate((dot(reflect(normalize(-light.direction), flakeNormal), normalize(IN.view)) + 1) * 0.5);
     float NdotV = max(0, dot(normal, normalize(IN.view)));
 
-    float3 specular = pow(RdotV, _SpecPower) * _SpecColor * 2;
-    specular += pow(RdotV, _SpecPower * 80) * _HotSpot; // hotspot
+    float3 specular = pow(RdotVFlake, _SpecPower) * _SpecColor * 2;
+    specular += pow(RdotV, _SpecPower * 110) * _HotSpot; // hotspot
     specular *= specMap;
 
     float shadow = lerp(MainLightRealtimeShadow(IN.shadow), 1.0, GetMainLightShadowFade(IN.positionWS)).x;
@@ -156,6 +165,8 @@ Shader "Custom/ship"
         [Normal] _NormalMap("Normal Map", 2D) = "bump" {}
         _AmbientOcc("Ambient Occlusion Map", 2D) = "white" {}
         _SpecularMap("Specular Map", 2D) = "white" {}
+        _NoiseMap("Noise Map", 3D) = "white" {}
+        _Flake("Flake intensity", Float) = 0
     }
 
     SubShader
