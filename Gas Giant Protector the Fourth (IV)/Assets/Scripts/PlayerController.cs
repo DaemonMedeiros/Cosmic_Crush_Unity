@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float movementX;
 
-    public float speed = 200f;
+    public float speed = 4500f;
 
     void Awake()
     {
