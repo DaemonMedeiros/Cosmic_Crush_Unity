@@ -102,7 +102,7 @@ float4 frag(Varyings IN) : SV_Target
     float NdotV = max(0, dot(normal, normalize(IN.view)));
 
     float3 specular = pow(RdotVFlake, _SpecPower) * _SpecColor * 2;
-    specular += pow(RdotV, _SpecPower * 110) * _HotSpot; // hotspot
+    specular += pow(RdotV, _SpecPower * 80) * _HotSpot; // hotspot
     specular *= specMap;
 
     float shadow = lerp(MainLightRealtimeShadow(IN.shadow), 1.0, GetMainLightShadowFade(IN.positionWS)).x;
