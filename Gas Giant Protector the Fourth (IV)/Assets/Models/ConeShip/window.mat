@@ -61,6 +61,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NoiseMap:
+        m_Texture: {fileID: 11700000, guid: 9ff4f531f3ac7144d8f138d6331eef17, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _NormalMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -107,9 +111,14 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DiffuseMax: 1
+    - _DiffuseMin: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _EnvmapMax: 0
+    - _EnvmapMin: 0
+    - _Flake: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -132,8 +141,14 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0, g: 0.35051346, b: 0.46226418, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseMax: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseMin: {r: 0.199, g: 0.284, b: 0.4716981, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EnvmapMax: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
+    - _EnvmapMin: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
     - _SpecColor: {r: 0.22014064, g: 0.4811321, b: 0.39829546, a: 1}
+    - _SpecularMax: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularMin: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7400412967701471313

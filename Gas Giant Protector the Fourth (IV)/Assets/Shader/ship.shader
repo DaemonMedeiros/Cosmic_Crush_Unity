@@ -4,6 +4,13 @@ HLSLINCLUDE
 #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
 #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_SCREEN
 #pragma multi_compile_fragment _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
+#pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
+#pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
+#pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
+#if (UNITY_VERSION >= 60010000)
+    #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
+    #pragma multi_compile_fragment _ _REFLECTION_PROBE_ATLAS
+#endif
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -48,6 +55,12 @@ CBUFFER_START(UnityPerMaterial)
     float _Flake;
     float4 _BaseMap_ST;
     float4 _NormalMap_ST;
+    float4 _DiffuseMin;
+    float4 _DiffuseMax;
+    float4 _EnvmapMin;
+    float4 _EnvmapMax;
+    float4 _SpecularMin;
+    float4 _SpecularMax;
 CBUFFER_END
 
 Varyings vert(Attributes IN)
@@ -101,13 +114,17 @@ float4 frag(Varyings IN) : SV_Target
     float RdotVFlake = saturate((dot(reflect(normalize(-light.direction), flakeNormal), normalize(IN.view)) + 1) * 0.5);
     float NdotV = max(0, dot(normal, normalize(IN.view)));
 
-    float3 specular = pow(RdotVFlake, _SpecPower) * _SpecColor * 2;
+    float3 envmap = GlossyEnvironmentReflection(normalize(reflect(-IN.view, normal)), IN.positionWS.xyz, 0.0f, 1.0f, mul((float3x3)UNITY_MATRIX_V, normal)).xyz;
+
+    envmap *= lerp(_EnvmapMin, _EnvmapMax, NdotV);
+
+    float3 specular = pow(RdotVFlake, _SpecPower) * _SpecColor * lerp(_SpecularMin, _SpecularMax, NdotV) * 2;
     specular += pow(RdotV, _SpecPower * 80) * _HotSpot; // hotspot
     specular *= specMap;
 
     float shadow = lerp(MainLightRealtimeShadow(IN.shadow), 1.0, GetMainLightShadowFade(IN.positionWS)).x;
 
-    color *= pow(NdotV, 0.5); // extinction
+    color *= lerp(_DiffuseMin, _DiffuseMax, NdotV); // extinction
 
     float4 result = color;
     result.xyz += specular;// specular
@@ -117,6 +134,7 @@ float4 frag(Varyings IN) : SV_Target
     result.xyz += shLight * color; // ambient
     result.xyz *= IN.color * ambientOcc; // ambient occlusion
     result.xyz += (shLight + (diffuse * 0.5 * light.color * shadow)) * (1 - pow(NdotV, 0.5)) * 0.25 * ambientOcc * specMap; // rim light
+    result.xyz += envmap * IN.color; // reflections
 
     return result;
 }
@@ -167,6 +185,12 @@ Shader "Custom/ship"
         _SpecularMap("Specular Map", 2D) = "white" {}
         _NoiseMap("Noise Map", 3D) = "white" {}
         _Flake("Flake intensity", Float) = 0
+        _DiffuseMin("Diffuse min", Color) = (1, 1, 1, 1)
+        _DiffuseMax("Diffuse max", Color) = (1, 1, 1, 1)
+        _EnvmapMin("Envmap min", Color) = (0, 0, 0, 1)
+        _EnvmapMax("Envmap max", Color) = (0, 0, 0, 1)
+        _SpecularMin("Specular min", Color) = (1, 1, 1, 1)
+        _SpecularMax("Specular max", Color) = (1, 1, 1, 1)
     }
 
     SubShader
