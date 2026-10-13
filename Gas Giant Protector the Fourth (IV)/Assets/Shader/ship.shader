@@ -124,7 +124,9 @@ float4 frag(Varyings IN) : SV_Target
 
     float shadow = lerp(MainLightRealtimeShadow(IN.shadow), 1.0, GetMainLightShadowFade(IN.positionWS)).x;
 
-    color *= lerp(_DiffuseMin, _DiffuseMax, NdotV); // extinction
+    float4 extinction = lerp(_DiffuseMin, _DiffuseMax, NdotV);
+
+    color *= extinction; // extinction
 
     float4 result = color;
     result.xyz += specular;// specular
@@ -132,8 +134,8 @@ float4 frag(Varyings IN) : SV_Target
     result.xyz *= light.color; // tint by sun color
     result.xyz *= shadow; // shadow
     result.xyz += shLight * color; // ambient
+    result.xyz += extinction * (shLight + (diffuse * 0.5 * light.color * shadow)) * (1 - pow(NdotV, 0.5)) * 0.25 * specMap; // rim light
     result.xyz *= IN.color * ambientOcc; // ambient occlusion
-    result.xyz += (shLight + (diffuse * 0.5 * light.color * shadow)) * (1 - pow(NdotV, 0.5)) * 0.25 * ambientOcc * specMap; // rim light
     result.xyz += envmap * IN.color; // reflections
 
     return result;

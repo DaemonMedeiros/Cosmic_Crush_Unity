@@ -11,7 +11,17 @@ ScriptedImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: body.007
+    second: {fileID: 2100000, guid: 784a3a21be0173d469dc39b8e4f6b6e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: cone.004
+    second: {fileID: 2100000, guid: f565935be69692a4083403b2fa49935e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cone.007
     second: {fileID: 2100000, guid: f565935be69692a4083403b2fa49935e, type: 2}
   - first:
       type: UnityEngine:Material
@@ -21,7 +31,17 @@ ScriptedImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: icecream.007
+    second: {fileID: 2100000, guid: 5e12b1928c3f78e48a5b2bb37a00a41a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: window.004
+    second: {fileID: 2100000, guid: 37178dfc3f978d34793b77fc0f03146b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: window.007
     second: {fileID: 2100000, guid: 37178dfc3f978d34793b77fc0f03146b, type: 2}
   serializedVersion: 2
   userData: 
@@ -74,10 +94,10 @@ ScriptedImporter:
 '
   optimizeGameObjects: 0
   materials:
-  - {fileID: 3652370533178380534, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
-  - {fileID: 4046285071738534587, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
-  - {fileID: -6108138272138301506, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
-  - {fileID: -9013112812028412476, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  - {fileID: 7134467607051890720, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  - {fileID: -137605206031582297, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  - {fileID: 2493389041813418374, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  - {fileID: -3072338108413341863, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
   textures: []
   hasSceneData: 1
   hasAnimationData: 0
