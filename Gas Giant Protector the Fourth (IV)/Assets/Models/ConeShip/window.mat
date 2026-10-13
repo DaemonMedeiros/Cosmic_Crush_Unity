@@ -141,10 +141,10 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0, g: 0.35051346, b: 0.46226418, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DiffuseMax: {r: 1, g: 1, b: 1, a: 1}
-    - _DiffuseMin: {r: 0.199, g: 0.284, b: 0.4716981, a: 1}
+    - _DiffuseMax: {r: 0, g: 0.018737463, b: 0.4056604, a: 1}
+    - _DiffuseMin: {r: 0.5330188, g: 0.67514366, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EnvmapMax: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
+    - _EnvmapMax: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}
     - _EnvmapMin: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
     - _SpecColor: {r: 0.22014064, g: 0.4811321, b: 0.39829546, a: 1}
     - _SpecularMax: {r: 1, g: 1, b: 1, a: 1}

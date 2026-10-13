@@ -119,7 +119,7 @@ float4 frag(Varyings IN) : SV_Target
     envmap *= lerp(_EnvmapMin, _EnvmapMax, NdotV);
 
     float3 specular = pow(RdotVFlake, _SpecPower) * _SpecColor * lerp(_SpecularMin, _SpecularMax, NdotV) * 2;
-    specular += pow(RdotV, _SpecPower * 80) * _HotSpot; // hotspot
+    specular += pow(RdotV, _SpecPower * 80) * _HotSpot * 5; // hotspot
     specular *= specMap;
 
     float shadow = lerp(MainLightRealtimeShadow(IN.shadow), 1.0, GetMainLightShadowFade(IN.positionWS)).x;
@@ -187,12 +187,12 @@ Shader "Custom/ship"
         _SpecularMap("Specular Map", 2D) = "white" {}
         _NoiseMap("Noise Map", 3D) = "white" {}
         _Flake("Flake intensity", Float) = 0
-        _DiffuseMin("Diffuse min", Color) = (1, 1, 1, 1)
-        _DiffuseMax("Diffuse max", Color) = (1, 1, 1, 1)
-        _EnvmapMin("Envmap min", Color) = (0, 0, 0, 1)
-        _EnvmapMax("Envmap max", Color) = (0, 0, 0, 1)
-        _SpecularMin("Specular min", Color) = (1, 1, 1, 1)
-        _SpecularMax("Specular max", Color) = (1, 1, 1, 1)
+        [ColorUsage(true, true)] _DiffuseMin("Diffuse min", Color) = (1, 1, 1, 1)
+        [ColorUsage(true, true)] _DiffuseMax("Diffuse max", Color) = (1, 1, 1, 1)
+        [ColorUsage(true, true)] _EnvmapMin("Envmap min", Color) = (0, 0, 0, 1)
+        [ColorUsage(true, true)] _EnvmapMax("Envmap max", Color) = (0, 0, 0, 1)
+        [ColorUsage(true, true)] _SpecularMin("Specular min", Color) = (1, 1, 1, 1)
+        [ColorUsage(true, true)] _SpecularMax("Specular max", Color) = (1, 1, 1, 1)
     }
 
     SubShader

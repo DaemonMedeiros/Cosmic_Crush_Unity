@@ -118,7 +118,7 @@ Material:
     - _EnvironmentReflections: 1
     - _EnvmapMax: 0
     - _EnvmapMin: 0
-    - _Flake: 0.5
+    - _Flake: 0.35
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
