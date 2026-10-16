@@ -100,13 +100,16 @@ float4 frag(Varyings IN) : SV_Target
 
     reflectionSample *= saturate(0.1 + pow(1-NdotV, 1));
 
+    float fog = saturate(length(IN.view) / 5000.0f);
+
     float4 result;
     result.xyz = specular;// specular
     result.xyz *= light.color; // tint by sun color
     result.xyz *= shadow; // shadow
     result.xyz += reflectionSample; // reflection
+    result.xyz = lerp(result.xyz, pow(float3(0.6235294, 0.7411765, 0.8745099), 2) * 5.0f, fog);
 
-    result.w = 1;
+    result.w = saturate(1-pow(length(IN.view) / 3000.0f, 3)); // abuse alpha so it blends into sky better
 
     return result;
 }
@@ -122,10 +125,11 @@ Shader "Custom/sea"
 
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
+        Tags { "Queue"="Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
