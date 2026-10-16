@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 
     public float speed = 4500f;
 
+    private float introTimer = 0;
+
     void Awake()
     {
         controls = new InputSystem_Actions();
@@ -25,14 +27,21 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Vector2 movementVector = controls.Player.Move.ReadValue<Vector2>();
-        float movementX = movementVector.x;
-        rb.AddForce(Vector3.right * movementVector * speed * Time.deltaTime);
-        
     }
 
     void FixedUpdate()
     {
+        if (introTimer < 1.2f)
+        {
+            introTimer += Time.fixedDeltaTime;
+        }
+        else
+        {
+            Vector2 movementVector = controls.Player.Move.ReadValue<Vector2>();
+            float movementX = movementVector.x;
+            rb.AddForce(Vector3.right * movementVector * speed * Time.fixedDeltaTime);
+        }
+
         rb.linearVelocity = new Vector3( Mathf.Clamp(rb.linearVelocity.x, -10f, 10f), 0, 0 );
     }
 
