@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 5985154330093771697}
   - component: {fileID: 7246766270161914378}
   - component: {fileID: 4051379798734556179}
-  - component: {fileID: 5818704850242497011}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: EnemyBasic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,18 +138,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 124
+  m_Constraints: 116
   m_CollisionDetection: 0
---- !u!114 &5818704850242497011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8518756001554760335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c65b97ca93a22324ead89c0d3aa9fc41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  speed: 2.5
