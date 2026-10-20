@@ -170,11 +170,8 @@ Varyings_lowlod vert_lowlod(Attributes_lowlod IN)
 
     float3 worldPos = TransformObjectToWorld(IN.positionOS.xyz);
     OUT.positionWS = worldPos;
-    float3 positionOS = IN.positionOS.xyz;
 
     float3 view = GetCameraPositionWS() - worldPos;
-
-    VertexPositionInputs positions = GetVertexPositionInputs(positionOS.xyz);
 
     float radiosity = saturate(2 * IN.color.x);
     
