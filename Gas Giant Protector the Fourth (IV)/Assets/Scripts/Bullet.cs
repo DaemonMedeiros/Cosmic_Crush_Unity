@@ -12,11 +12,14 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(dir * speed * Time.deltaTime);
-
-        if (gameObject.transform.position.z > 13)
+        if(gameObject.activeSelf)
         {
-            Destroy(gameObject);
+            transform.Translate(dir * speed * Time.deltaTime);
+
+            if (gameObject.transform.position.z > 23)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }

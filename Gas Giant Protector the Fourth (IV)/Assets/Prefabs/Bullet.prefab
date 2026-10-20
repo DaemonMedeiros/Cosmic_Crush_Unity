@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: bullet
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 218b3c2a2d17df345b027864fc46a4ef, type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -79,6 +83,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 218b3c2a2d17df345b027864fc46a4ef, type: 3}
       insertIndex: -1
       addedObject: {fileID: -4233832997771444483}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 218b3c2a2d17df345b027864fc46a4ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7880162136054203287}
   m_SourcePrefab: {fileID: 100100000, guid: 218b3c2a2d17df345b027864fc46a4ef, type: 3}
 --- !u!1 &7156004029943415092 stripped
 GameObject:
@@ -97,3 +104,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40d2b788748cdd943b66b9d4d20b4fed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
+  speed: 15
+--- !u!65 &7880162136054203287
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7156004029943415092}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.828427, y: 2.0871465, z: 0.25000063}
+  m_Center: {x: 0, y: -0.37064025, z: -0.12500007}

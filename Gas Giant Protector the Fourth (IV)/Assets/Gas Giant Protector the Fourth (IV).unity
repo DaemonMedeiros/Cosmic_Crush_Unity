@@ -1292,6 +1292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletManager
   bulletPrefab: {fileID: 7156004029943415092, guid: 7e2d4cb055ab8eb4c9c4790f114709b9, type: 3}
   player: {fileID: 114766070}
+  max_bullets: 5
 --- !u!4 &1913904671
 Transform:
   m_ObjectHideFlags: 0
