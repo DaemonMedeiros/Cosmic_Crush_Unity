@@ -7,6 +7,7 @@ HLSLINCLUDE
 #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
 #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
 #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
+#pragma multi_compile _ _LOWLOD
 #if (UNITY_VERSION >= 60010000)
     #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
     #pragma multi_compile_fragment _ _REFLECTION_PROBE_ATLAS
@@ -86,6 +87,8 @@ float4 frag(Varyings IN) : SV_Target
 
     float RdotV = saturate((dot(reflect(normalize(-light.direction), normal), normalize(IN.view)) + 1) * 0.5);
     float NdotV = max(0, dot(normal, normalize(IN.view)));
+    
+    float3 diffuse = saturate(0.1 + dot(normal, normalize(light.direction)));
 
     // this formula is stupid but looks nice and i sorely apologize to whoever has to look at this code
     float3 specular = ((pow(RdotV, 2) * 0.15) + (pow(RdotV, 11) * 0.4) + (pow(RdotV, 160) * 4) + (pow(RdotV, 320) * 16) + (pow(RdotV, 500) * 64)) * light.color * 0.1;
@@ -96,7 +99,15 @@ float4 frag(Varyings IN) : SV_Target
 
     screenSpaceNormalOffset *= NdotV * 3;
 
+    //#define _LOWLOD
+
+    #ifdef _LOWLOD
+    float3 skyCapColor = float3(0.12, 0.20, 0.41);
+    float3 skyHorizonColor = float3(10.93, 15.87, 20.93) * 0.2;
+    float3 reflectionSample = GlossyEnvironmentReflection(normalize(reflect(-IN.view, normal)), IN.positionWS.xyz, 0.0f, 1.0f, float3(0, 0, 1)).xyz;
+    #else
     float3 reflectionSample = tex2Dproj(gReflectionTexture, IN.screenUV + float4(screenSpaceNormalOffset, 0, 0));
+    #endif
 
     reflectionSample *= saturate(0.1 + pow(1-NdotV, 1));
 
@@ -105,13 +116,12 @@ float4 frag(Varyings IN) : SV_Target
     float3 foam = pow((1-max(0, dot(normal, float3(0,1,0.5)))), 2) + (pow((max(0, dot(normal, float3(0,1,0)))), 600) * 0.01);
 
     float4 result;
-    result.xyz = specular + (foam * float3(0.8, 0.9, 1.0));// specular
+    result.xyz = specular + (foam * float3(0.8, 0.9, 1.0) * diffuse);// specular
     result.xyz *= light.color; // tint by sun color
     result.xyz *= shadow; // shadow
     result.xyz += reflectionSample * (1-foam); // reflection
-    result.xyz += (foam * float3(0.6, 0.7, 0.8)); // foam shadow
+    result.xyz += (foam * float3(0.6, 0.7, 0.8)) * (1 + diffuse) * 0.5f; // foam ambient
     result.xyz = lerp(result.xyz, pow(float3(0.6235294, 0.7411765, 0.8745099), 2) * 5.0f, fog);
-    //result.xyz = foam;
 
     result.w = saturate(1-pow(length(IN.view) / 3000.0f, 3)); // abuse alpha so it blends into sky better
 

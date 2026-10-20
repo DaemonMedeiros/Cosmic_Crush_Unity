@@ -20,11 +20,21 @@ public class ReflectionCam : MonoBehaviour
     {
         if (camera.gameObject == this.gameObject)
             GL.invertCulling = true;
+
+        if (camera.gameObject == this.gameObject || camera.cameraType == CameraType.Reflection)
+        {
+            Shader.EnableKeyword("_LOWLOD");
+        }
     }
 
     void UnflipFaceCull(ScriptableRenderContext context, Camera camera)
     {
         if (camera.gameObject == this.gameObject)
             GL.invertCulling = false;
+
+        if (camera.gameObject == this.gameObject || camera.cameraType == CameraType.Reflection)
+        {
+            Shader.DisableKeyword("_LOWLOD");
+        }
     }
 }
