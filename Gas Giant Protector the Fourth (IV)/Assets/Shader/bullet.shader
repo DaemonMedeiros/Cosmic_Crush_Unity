@@ -14,11 +14,15 @@ struct Varyings
     float4 color : COLOR0;
 };
 
+CBUFFER_START(UnityPerMaterial)
+    float Brightness;
+CBUFFER_END
+
 Varyings vert(Attributes IN)
 {
     Varyings OUT;
     OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-    OUT.color = pow(IN.color * 2, 2.2);
+    OUT.color = pow(IN.color * 2, 2.2) * Brightness;
     return OUT;
 }
 
@@ -31,6 +35,11 @@ ENDHLSL
 
 Shader "Custom/bullet"
 {
+    Properties
+    {
+        Brightness("Brightness", Float) = 1
+    }
+
     SubShader
     {
         Tags { "Queue"="Transparent" "RenderType" = "Transparent"  "RenderPipeline" = "UniversalPipeline" }
