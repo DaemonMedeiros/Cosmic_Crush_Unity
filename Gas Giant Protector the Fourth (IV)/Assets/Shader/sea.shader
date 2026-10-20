@@ -74,8 +74,8 @@ Varyings vert(Attributes IN)
 
 float4 frag(Varyings IN) : SV_Target
 {
-    float3 normal1 = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, IN.uv.xy + (_Time.x * float2(-1, 6))));
-    float3 normal2 = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, (IN.uv.xy * 0.5) + (_Time.x * float2(1, 6))));
+    float3 normal1 = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, IN.uv.xy + (_Time.x * float2(-0, 6))));
+    float3 normal2 = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, (IN.uv.xy + (_Time.x * float2(0, 2))) * 0.5));
 
     float3 normal = normalize(lerp(float3(0, 0, 1), normal1 + normal2, 0.5f));
 
@@ -102,12 +102,16 @@ float4 frag(Varyings IN) : SV_Target
 
     float fog = saturate(length(IN.view) / 5000.0f);
 
+    float3 foam = pow((1-max(0, dot(normal, float3(0,1,0.5)))), 2) + (pow((max(0, dot(normal, float3(0,1,0)))), 600) * 0.01);
+
     float4 result;
-    result.xyz = specular;// specular
+    result.xyz = specular + (foam * float3(0.8, 0.9, 1.0));// specular
     result.xyz *= light.color; // tint by sun color
     result.xyz *= shadow; // shadow
-    result.xyz += reflectionSample; // reflection
+    result.xyz += reflectionSample * (1-foam); // reflection
+    result.xyz += (foam * float3(0.6, 0.7, 0.8)); // foam shadow
     result.xyz = lerp(result.xyz, pow(float3(0.6235294, 0.7411765, 0.8745099), 2) * 5.0f, fog);
+    //result.xyz = foam;
 
     result.w = saturate(1-pow(length(IN.view) / 3000.0f, 3)); // abuse alpha so it blends into sky better
 
