@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BasicEnemyManager : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class BasicEnemyManager : MonoBehaviour
                 float zPos = zSpawn - distance;
 
                 Vector3 spawnPos = new Vector3(xPos, yPos, zPos);
-                GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+                GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity, this.transform);
                 enemies[col][row] = newEnemy;
             }
         }
@@ -47,46 +48,50 @@ public class BasicEnemyManager : MonoBehaviour
 
     void Update()
     {
+        DetectBounds();
+        MoveBasicEnemies();
+    }
+
+
+    void DetectBounds()
+    {
         bool hitBounds = false;
 
-        if (moveDir == 1)
+        for(int col = 0; col < COLS; col++)
         {
             for (int row = 0; row < ROWS; row++)
             {
-                if (enemies[COLS - 1][row] == null)
+                if (!enemies[col][row].activeSelf)
                 {
                     continue;
                 }
-                if (enemies[COLS - 1][row].transform.position.x >= bounds)
+
+                if (moveDir == 1)
                 {
-                    hitBounds = true;
-                    break;
+                    if (enemies[col][row].transform.position.x >= bounds)
+                    {
+                        hitBounds = true;
+                        break;
+                    }
                 }
-            }
-        }
-        else
-        {
-            for (int row = 0; row < ROWS; row++)
-            {
-                if (enemies[0][row] == null)
+                else if (moveDir == -1)
                 {
-                    continue;
-                }
-                if (enemies[0][row].transform.position.x <= -bounds)
-                {
-                    hitBounds = true;
-                    break;
+                    if (enemies[col][row].transform.position.x <= -bounds)
+                    {
+                        hitBounds = true;
+                        break;
+                    }
                 }
             }
         }
 
         if (hitBounds)
         {
-            moveDir = -moveDir;
+            moveDir *= -1;
 
             for (int col = 0; col < COLS; col++)
             {
-                if (enemies[col][0] != null)
+                if (enemies[col][0].activeSelf)
                 {
                     targetZ = enemies[col][0].transform.position.z - 1.0f;
                     isMovingDown = true;
@@ -94,12 +99,15 @@ public class BasicEnemyManager : MonoBehaviour
                 }
             }
         }
+    }
 
+    void MoveBasicEnemies()
+    {
         for (int col = 0; col < COLS; col++)
         {
             for (int row = 0; row < ROWS; row++)
             {
-                if (enemies[col][row] == null)
+                if (!enemies[col][row].activeSelf)
                 {
                     continue;
                 }
