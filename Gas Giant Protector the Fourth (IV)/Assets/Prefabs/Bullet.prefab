@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9ae842b41da2d0740b66ba08dad0a679, type: 2}
     - target: {fileID: 919132149155446097, guid: 218b3c2a2d17df345b027864fc46a4ef, type: 3}
       propertyPath: m_Name
-      value: bullet
+      value: Bullet
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 218b3c2a2d17df345b027864fc46a4ef, type: 3}
       propertyPath: m_TagString
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40d2b788748cdd943b66b9d4d20b4fed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  speed: 15
+  speed: 35
 --- !u!65 &7880162136054203287
 BoxCollider:
   m_ObjectHideFlags: 0
