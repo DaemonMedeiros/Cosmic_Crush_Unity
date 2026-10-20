@@ -114,7 +114,7 @@ float4 frag(Varyings IN) : SV_Target
     float RdotVFlake = saturate((dot(reflect(normalize(-light.direction), flakeNormal), normalize(IN.view)) + 1) * 0.5);
     float NdotV = max(0, dot(normal, normalize(IN.view)));
 
-    float3 envmap = GlossyEnvironmentReflection(normalize(reflect(-IN.view, normal)), IN.positionWS.xyz, 0.0f, 1.0f, mul((float3x3)UNITY_MATRIX_V, normal)).xyz;
+    float3 envmap = GlossyEnvironmentReflection(normalize(reflect(-IN.view, normal)), IN.positionWS.xyz, 0.0f, 1.0f, float3(0, 0, 1)).xyz;
 
     envmap *= lerp(_EnvmapMin, _EnvmapMax, NdotV);
 
@@ -137,6 +137,87 @@ float4 frag(Varyings IN) : SV_Target
     result.xyz += extinction * (shLight + (diffuse * 0.5 * light.color * shadow)) * (1 - pow(NdotV, 0.5)) * 0.25 * specMap; // rim light
     result.xyz *= IN.color * ambientOcc; // ambient occlusion
     result.xyz += envmap * IN.color; // reflections
+
+    return result;
+}
+
+struct Attributes_lowlod
+{
+    float4 positionOS : POSITION;
+    float2 uv : TEXCOORD0;
+    float4 normalOS : NORMAL0;
+    float4 color : COLOR0;
+};
+
+struct Varyings_lowlod
+{
+    float4 positionHCS : SV_POSITION;
+    float4 uv : TEXCOORD0;
+    float3 positionWS : TEXCOORD1;
+    float3 envmapCoord : TEXCOORD2;
+    float4 diffuse : COLOR0;
+    float3 specular : COLOR1;
+    float3 envmap : COLOR2;
+};
+
+Varyings_lowlod vert_lowlod(Attributes_lowlod IN)
+{
+    Varyings_lowlod OUT;
+    OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+    OUT.uv.xy = TRANSFORM_TEX(IN.uv, _BaseMap);
+    OUT.uv.zw = TRANSFORM_TEX(IN.uv, _NormalMap);
+    float3 normalWS = TransformObjectToWorldNormal(IN.normalOS);
+
+    float3 worldPos = TransformObjectToWorld(IN.positionOS.xyz);
+    OUT.positionWS = worldPos;
+    float3 positionOS = IN.positionOS.xyz;
+
+    float3 view = GetCameraPositionWS() - worldPos;
+
+    VertexPositionInputs positions = GetVertexPositionInputs(positionOS.xyz);
+
+    float radiosity = saturate(2 * IN.color.x);
+    
+    Light light = GetMainLight();
+
+    float NdotV = max(0, dot(normalWS, normalize(view)));
+    float RdotV = saturate((dot(reflect(normalize(-light.direction), normalWS), normalize(view)) + 1) * 0.5);
+
+    float3 shLight = SampleSH(normalWS);
+
+    float3 diffuse = saturate(0.1 + dot(normalWS, normalize(light.direction)));
+
+    float3 extinction = lerp(_DiffuseMin, _DiffuseMax, NdotV);
+
+    OUT.diffuse.xyz = extinction * diffuse * light.color;
+    OUT.diffuse.xyz += shLight;
+    OUT.diffuse.xyz *= radiosity;
+    OUT.diffuse.w = radiosity;
+
+    OUT.specular = pow(RdotV, _SpecPower) * _SpecColor * lerp(_SpecularMin, _SpecularMax, NdotV) * 2 * light.color * diffuse;
+    OUT.specular.xyz += extinction * (shLight + (diffuse * 0.5 * light.color)) * (1 - pow(NdotV, 0.5)) * 0.25;
+
+    OUT.envmap = radiosity * lerp(_EnvmapMin, _EnvmapMax, NdotV);
+
+    OUT.envmapCoord = normalize(reflect(-view, normalWS));
+
+    return OUT;
+}
+
+float4 frag_lowlod(Varyings_lowlod IN) : SV_Target
+{
+    float3 envmap = GlossyEnvironmentReflection(normalize(IN.envmapCoord), IN.positionWS.xyz, 0.0f, 1.0f, float3(0, 0, 1));
+    float4 ambientOcc = SAMPLE_TEXTURE2D(_AmbientOcc, sampler_AmbientOcc, IN.uv.zw); // normal map ambient occlusion
+    float4 specMap = SAMPLE_TEXTURE2D(_SpecularMap, sampler_SpecularMap, IN.uv.xy);
+    float4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv.xy) * _BaseColor;
+
+    float4 result;
+
+    result.xyz = color;
+    result.xyz *= IN.diffuse.xyz * ambientOcc;
+    result.xyz += IN.specular.xyz * ambientOcc * specMap;
+    result.xyz += IN.envmap.xyz * envmap;
+    result.w = color.w;
 
     return result;
 }
@@ -202,8 +283,38 @@ Shader "Custom/ship"
         Pass
         {
             HLSLPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
+            
+            #pragma multi_compile _ _LOWLOD
+
+            #pragma vertex v
+            #pragma fragment f
+
+            #ifdef _LOWLOD
+
+            Varyings_lowlod v(Attributes_lowlod IN)
+            {
+                return vert_lowlod(IN);
+            }
+            
+            float4 f(Varyings_lowlod IN) : SV_Target
+            {
+                return frag_lowlod(IN);
+            }
+
+            #else
+
+            Varyings v(Attributes IN)
+            {
+                return vert(IN);
+            }
+            
+            float4 f(Varyings IN) : SV_Target
+            {
+                return frag(IN);
+            }
+
+            #endif
+
             ENDHLSL
         }
 

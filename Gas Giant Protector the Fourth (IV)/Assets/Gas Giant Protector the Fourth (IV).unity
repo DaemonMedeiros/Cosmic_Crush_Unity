@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 114766081}
   - component: {fileID: 114766080}
   - component: {fileID: 114766079}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -206,7 +206,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &114766074
 MeshRenderer:
@@ -279,6 +279,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1629250897}
+  - {fileID: 459631845}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114766077
@@ -330,8 +331,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 2, y: 0, z: 0}
+  m_Radius: 0.8
+  m_Center: {x: 1.65, y: -0.375, z: -0.2}
 --- !u!65 &114766079
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -372,8 +373,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9303662, y: 0.86648494, z: 3.2445538}
-  m_Center: {x: 0, y: -0.4746689, z: 1.1222769}
+  m_Size: {x: 1.25, y: 0.6065394, z: 2}
+  m_Center: {x: 0, y: -0.4, z: 0.88}
 --- !u!65 &114766081
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -393,8 +394,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.930366, y: 1.806543, z: 3.46777}
-  m_Center: {x: 1.979929, y: -0.4032715, z: 1.233885}
+  m_Size: {x: 0.95, y: 0.95, z: 2.44}
+  m_Center: {x: 1.65, y: -0.4032715, z: 0.9}
 --- !u!65 &114766082
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -414,8 +415,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.930366, y: 1.806543, z: 3.4677696}
-  m_Center: {x: -1.9799287, y: -0.4032715, z: 1.2338848}
+  m_Size: {x: 0.95, y: 0.95, z: 2.44}
+  m_Center: {x: -1.65, y: -0.4032715, z: 0.9}
 --- !u!135 &114766083
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -435,8 +436,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: -2, y: 0, z: 0}
+  m_Radius: 0.8
+  m_Center: {x: -1.65, y: -0.375, z: -0.2}
 --- !u!1 &210110833
 GameObject:
   m_ObjectHideFlags: 0
@@ -497,7 +498,7 @@ GameObject:
   m_Component:
   - component: {fileID: 459631845}
   - component: {fileID: 459631844}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Reflection Probe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -514,21 +515,21 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 0
-  m_RefreshMode: 0
+  m_Mode: 1
+  m_RefreshMode: 1
   m_TimeSlicingMode: 0
   m_Resolution: 256
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 100, y: 100, z: 100}
+  m_BoxSize: {x: 15000, y: 15000, z: 15000}
   m_BoxOffset: {x: 0, y: 0, z: 0}
   m_NearClip: 0.3
   m_FarClip: 1000
-  m_ShadowDistance: 100
+  m_ShadowDistance: 0
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
   m_HDR: 1
@@ -545,12 +546,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 459631843}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 114766076}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &462241479
 GameObject:
@@ -711,7 +712,7 @@ MonoBehaviour:
   version: 2
   globalVolume: 0
   mode: 2
-  size: {x: 51, y: 6.5501842, z: 51}
+  size: {x: 100, y: 64, z: 100}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -729,7 +730,7 @@ MonoBehaviour:
     e10: 0
     e11: 1
     e12: 0
-    e13: -1.7750931
+    e13: -25.179043
     e20: 0
     e21: 0
     e22: 1
@@ -738,7 +739,7 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  cachedHashCode: 902096760
+  cachedHashCode: -756242868
   fillEmptySpaces: 0
 --- !u!4 &969944700
 Transform:
@@ -749,7 +750,7 @@ Transform:
   m_GameObject: {fileID: 969944698}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7750931, z: 0}
+  m_LocalPosition: {x: 0, y: 25.179043, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1251,6 +1252,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: sherp
       objectReference: {fileID: 0}
+    - target: {fileID: 3445542050043496534, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1272,5 +1277,4 @@ SceneRoots:
   - {fileID: 969944700}
   - {fileID: 1330124415}
   - {fileID: 1271210625}
-  - {fileID: 459631845}
   - {fileID: 210110835}
