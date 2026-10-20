@@ -22,7 +22,7 @@ Varyings vert(Attributes IN)
 {
     Varyings OUT;
     OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-    OUT.color = pow(IN.color * 2, 2.2) * Brightness;
+    OUT.color = (pow(IN.color * 2, 2.2) + (pow(IN.color, 10.0) * 5)) * Brightness;
     return OUT;
 }
 
