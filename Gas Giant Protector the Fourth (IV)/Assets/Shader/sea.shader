@@ -139,7 +139,7 @@ Shader "Custom/sea"
 
     SubShader
     {
-        Tags { "Queue"="Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
+        Tags { "Queue"="Transparent-50" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
         Pass
         {
