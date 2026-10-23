@@ -19,8 +19,6 @@ public class BasicEnemyManager : MonoBehaviour
     private float targetZ = 0f;
     private const float zMoveSpeed = 1.0f;
 
-
-
     void Start()
     {
         enemies = new GameObject[COLS][];
