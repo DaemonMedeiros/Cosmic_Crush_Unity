@@ -468,10 +468,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemyManager
   enemyPrefab: {fileID: 8518756001554760335, guid: 7610dbae644a2194bbce07c4edc8edbb, type: 3}
-  spacing: 1.5
+  spacing: 2
   moveSpeed: 2
-  bounds: 10
-  ROWS: 6
+  bounds: 15
+  ROWS: 3
   COLS: 6
 --- !u!4 &210110835
 Transform:
