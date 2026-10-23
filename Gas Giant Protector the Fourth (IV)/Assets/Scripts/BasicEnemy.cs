@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BasicEnemy : MonoBehaviour
 {
+
+    public int Health = 2;
     void Start()
     {
         
@@ -17,7 +19,15 @@ public class BasicEnemy : MonoBehaviour
         if(other.gameObject.CompareTag("Bullet"))
         {
             other.gameObject.SetActive(false);
-            gameObject.SetActive(false);
+
+            if(Health > 1)
+            {
+                Health--;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }

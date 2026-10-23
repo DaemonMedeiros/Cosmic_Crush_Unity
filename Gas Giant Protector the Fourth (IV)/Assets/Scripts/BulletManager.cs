@@ -12,6 +12,10 @@ public class BulletManager : MonoBehaviour
     public int max_bullets = 5;
     private GameObject [] bullets;
 
+    private bool firing = false;
+    private float fire_rate = 0.2f;
+    private float frameCount = 0.2f;
+
 
     void Start()
     {
@@ -32,18 +36,38 @@ public class BulletManager : MonoBehaviour
 
     void Update()
     {
-        if(controls.Player.Jump.WasPressedThisFrame())
+        if(!firing)
         {
-            Vector3 playerPos = new Vector3(playerRb.position.x, playerRb.position.y, -7.65f);
-
-            for (int i = 0; i < max_bullets; i++)
+            if (controls.Player.Jump.WasPressedThisFrame())
             {
-                if (!bullets[i].activeSelf)
+                firing = true;
+            }
+        }
+        else
+        {
+            float dt = Time.deltaTime;
+
+            frameCount += dt;
+
+            if(frameCount >= fire_rate)
+            {
+                Vector3 playerPos = new Vector3(playerRb.position.x, playerRb.position.y, -7.65f);
+
+                for (int i = 0; i < max_bullets; i++)
                 {
-                    bullets[i].transform.position = playerPos;
-                    bullets[i].SetActive(true);
-                    break;
+                    if (!bullets[i].activeSelf)
+                    {
+                        bullets[i].transform.position = playerPos;
+                        bullets[i].SetActive(true);
+                        break;
+                    }
                 }
+                frameCount = dt;
+            }
+
+            if(controls.Player.Jump.WasReleasedThisFrame())
+            {
+                firing = false;
             }
         }
     }
